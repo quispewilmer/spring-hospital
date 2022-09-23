@@ -14,9 +14,7 @@
     <name>demo</name>
     <description>Demo project for Spring Boot</description>
     <properties>
-        <java.version>17</java.version>
-        <hibernate.version>6.0.0.Beta2</hibernate.version>
-        <sql.version>1.5</sql.version>
+        <java.version>8</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -49,25 +47,18 @@
             <version>8.0.30</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.hibernate.tool/hibernate-tools-maven -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf -->
         <dependency>
-            <groupId>org.hibernate.tool</groupId>
-            <artifactId>hibernate-tools-maven</artifactId>
-            <version>6.0.0.Beta2</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>2.7.3</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
         <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/sql-maven-plugin -->
-        <dependency>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>sql-maven-plugin</artifactId>
-            <version>${sql.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <version>2.7.3</version>
         </dependency>
 
     </dependencies>
@@ -78,72 +69,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <!--            Hibernate tool configurations-->
-            <plugin>
-                <groupId>org.hibernate.tool</groupId>
-                <artifactId>hibernate-tools-maven</artifactId>
-                <version>${hibernate.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.hibernate.tool</groupId>
-                        <artifactId>hibernate-tools-orm</artifactId>
-                        <version>${hibernate.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.30</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>entity-generation</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>hbm2java</goal>
-                        </goals>
-                        <configuration>
-                            <ejb3>true</ejb3>
-                            <packageName>com.abchospital.web.model</packageName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!--            SQL generator-->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sql-maven-plugin</artifactId>
-                <version>${sql.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.30</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>create-database</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <driver>com.mysql.cj.jdbc.Driver</driver>
-                            <url>jdbc:mysql://localhost:3306/example2</url>
-                            <username>userexample2</username>
-                            <password>mysql</password>
-                            <autocommit>true</autocommit>
-                            <delimiter>;</delimiter>
-                            <sqlCommand>create table foo (id int not null primary key, baz varchar(256))</sqlCommand>
-                            <sqlCommand>create table foo2 (id int not null primary key, baz varchar(256))</sqlCommand>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-
 </project>
