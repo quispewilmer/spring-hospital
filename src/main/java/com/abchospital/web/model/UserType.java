@@ -1,5 +1,7 @@
 package com.abchospital.web.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,6 +16,7 @@ public class UserType {
     @Column(name = "description")
     private String description;
 
+    @JsonIgnore
     @OneToMany(mappedBy="userType")
     private List<User> userList;
 
