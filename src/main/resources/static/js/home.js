@@ -6,6 +6,10 @@ function getUsers() {
     return out;
 }
 
+function getUser(id) {
+    let out = $.ajax({ method: "GET", url: `${URL}/api/user/{id}` });
+}
+
 function getUserTypes() {
     let out = $.ajax({ method: "GET", url: `${URL}/api/user-type/` });
 
@@ -29,7 +33,9 @@ function postUser(user) {
 }
 
 function deleteUser(id) {
+    let out = $.ajax({ method: "DELETE", url: `${URL}/api/user/${id}`});
 
+    return out;
 }
 
 async function saveUser() {
@@ -47,7 +53,7 @@ async function saveUser() {
 
     let out = await postUser(user);
 
-    console.log(out);
+    fillUsersTable();
 }
 
 function mapUserInTableRow(user) {
@@ -59,6 +65,10 @@ function mapUserInTableRow(user) {
                     <td scope="col">${user.email}</td>
                     <td scope="col">${user.birthdate}</td>
                     <td scope="col">${user.userType.description}</td>
+                    <td scope="col">
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="editUserFromList('${user.id}')">Edit</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteUserFromList('${user.id}')">Delete</button>
+                    </td>
                 </tr>
                 `;
 }
@@ -68,8 +78,24 @@ function mapUserTypeInCombobox(userType) {
                     `;
 }
 
+async function fillUserForm(id) {
+    let user = await getUser(id);
+}
+
+async function editUserFromList(id) {
+    fillUserForm(id);
+}
+
+async function deleteUserFromList(id) {
+    let out = await deleteUser(id);
+
+    fillUsersTable();
+}
+
 async function fillUsersTable() {
     const usersTableBody = $("#users-table__body");
+
+    usersTableBody.empty();
 
     let users = await getUsers();
 
