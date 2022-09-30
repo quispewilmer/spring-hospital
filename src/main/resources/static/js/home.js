@@ -7,7 +7,9 @@ function getUsers() {
 }
 
 function getUser(id) {
-    let out = $.ajax({ method: "GET", url: `${URL}/api/user/{id}` });
+    let out = $.ajax({ method: "GET", url: `${URL}/api/user/${id}` });
+
+    return out;
 }
 
 function getUserTypes() {
@@ -18,6 +20,7 @@ function getUserTypes() {
 
 function postUser(user) {
     let out = $.ajax({ method: "POST", url: `${URL}/api/user/`, data: JSON.stringify({
+            id: user.id,
             username: user.username,
             password: user.password,
             cellphone: user.cellphone,
@@ -38,8 +41,19 @@ function deleteUser(id) {
     return out;
 }
 
+function addUserIdToUrl(id) {
+    history.pushState({}, '', location.pathname.concat(id));
+}
+
+function removeUserIdToUrl() {
+    history.pushState({}, '', location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1));
+}
+
 async function saveUser() {
+    let id = location.pathname.substring(location.pathname.lastIndexOf("/") + 1, location.pathname.length);
+
     let user = {
+        id: id == '' ? null : id,
         username: $("#username").val(),
         password: $("#password").val(),
         cellphone: $("#cellphone").val(),
@@ -66,7 +80,7 @@ function mapUserInTableRow(user) {
                     <td scope="col">${user.birthdate}</td>
                     <td scope="col">${user.userType.description}</td>
                     <td scope="col">
-                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="editUserFromList('${user.id}')">Edit</button>
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="editUserFromList('${user.id}')" data-bs-toggle="modal" data-bs-target="#userModal">Edit</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteUserFromList('${user.id}')">Delete</button>
                     </td>
                 </tr>
@@ -80,9 +94,19 @@ function mapUserTypeInCombobox(userType) {
 
 async function fillUserForm(id) {
     let user = await getUser(id);
+
+    let birthdate = user.birthdate.split('T')[0];
+
+    $("#username").val(user.username);
+    $("#password").val(user.password);
+    $("#cellphone").val(user.cellphone);
+    $("#email").val(user.email);
+    $("#birthdate").val(birthdate);
+    $("#user-type").val(user.userType.id);
 }
 
 async function editUserFromList(id) {
+    addUserIdToUrl(id);
     fillUserForm(id);
 }
 
@@ -122,6 +146,10 @@ function index() {
 
     saveButton.on("click", e => {
         saveUser();
+    })
+
+    $("#userModal").on("hidden.bs.modal", (e) => {
+        removeUserIdToUrl();
     })
 }
 
